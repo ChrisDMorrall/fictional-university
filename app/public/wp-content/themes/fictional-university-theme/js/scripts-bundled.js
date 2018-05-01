@@ -13660,8 +13660,14 @@ function () {
   }, {
     key: "getResults",
     value: function getResults() {
-      _jquery.default.getJSON('http://localhost:3000/wp-json/wp/v2/posts?search=' + this.searchField.val(), function (posts) {
-        alert(posts[0].title.rendered);
+      var _this = this;
+
+      _jquery.default.getJSON(universityData.root_url + '/wp-json/wp/v2/posts?search=' + this.searchField.val(), function (posts) {
+        _this.resultsDiv.html("\n        <h2 class=\"search-overlay__section-title\">Search Results</h2>\n        ".concat(posts.length ? '<ul class="link-list min-list">' : '<p>No results found</p>', "\n          ").concat(posts.map(function (item) {
+          return "<li><a href=\"".concat(item.link, "\">").concat(item.title.rendered, "</a></li>");
+        }).join(''), "\n        ").concat(posts.length ? '</ul>' : '', "\n      "));
+
+        _this.isSpinnerVisible = false;
       });
     }
   }, {
