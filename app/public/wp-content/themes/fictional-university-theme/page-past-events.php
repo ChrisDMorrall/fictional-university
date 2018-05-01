@@ -9,7 +9,7 @@ pageBanner(array(
 
 <div class="container container--narrow page-section">
 <?php
-  
+
   $today = date('Ymd');
   $pastEvents = new WP_Query(array(
     'paged' => get_query_var('paged', 1),
@@ -28,7 +28,7 @@ pageBanner(array(
   ));
 
   while($pastEvents->have_posts()) {
-    $pastEvents->the_post(); 
+    $pastEvents->the_post();
     get_template_part('template-parts/content-event');
   }
   echo paginate_links(array(
