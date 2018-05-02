@@ -95,7 +95,6 @@ class Search {
                     <p>${item.description}<a href="${item.permalink}" class="nu gray">Learn more</a></p>
                   </div>
                 </div>
-
                 `).join('')}
           </div>
         </div>
