@@ -13663,7 +13663,7 @@ function () {
     value: function getResults() {
       var _this = this;
 
-      _jquery.default.when(_jquery.default.getJSON(universityData.root_url + '/wp-jsonxxxx/wp/v2/posts?search=' + this.searchField.val()), _jquery.default.getJSON(universityData.root_url + '/wp-json/wp/v2/pages?search=' + this.searchField.val())).then(function (posts, pages) {
+      _jquery.default.when(_jquery.default.getJSON(universityData.root_url + '/wp-json/wp/v2/posts?search=' + this.searchField.val()), _jquery.default.getJSON(universityData.root_url + '/wp-json/wp/v2/pages?search=' + this.searchField.val())).then(function (posts, pages) {
         var combinedResults = posts[0].concat(pages[0]);
 
         _this.resultsDiv.html("\n        <h2 class=\"search-overlay__section-title\">Search Results</h2>\n        ".concat(combinedResults.length ? '<ul class="link-list min-list">' : '<p>No results found</p>', "\n          ").concat(combinedResults.map(function (item) {
