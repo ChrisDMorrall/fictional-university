@@ -13703,6 +13703,7 @@ function () {
       }, 301);
       console.log('Open');
       this.isOverlayOpen = true;
+      return false;
     }
   }, {
     key: "closeOverlay",

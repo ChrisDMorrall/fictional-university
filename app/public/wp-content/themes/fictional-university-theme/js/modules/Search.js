@@ -120,6 +120,7 @@ class Search {
     setTimeout(() => this.searchField.focus(), 301);
     console.log('Open');
     this.isOverlayOpen = true;
+    return false;
   }
 
   closeOverlay() {
