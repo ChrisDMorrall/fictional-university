@@ -14,6 +14,7 @@
       <div class="generic-content"><?php the_field('main_body_content'); ?></div>
 
       <?php
+        // Output related professors
         $relatedProfessors = new WP_Query(array(
           'posts_per_page' => -1,
           'post_type' => 'professor',
@@ -50,6 +51,7 @@
 
         wp_reset_postdata();
 
+          // Output related events
         $today = date('Ymd');
         $homepageEvents = new WP_Query(array(
           'posts_per_page' => 2,
@@ -65,12 +67,15 @@
               'type' => 'numeric'
             ),
             array(
-              'key' => 'related_programs',
+              'key' => 'related_program',
               'compare' => 'LIKE',
               'value' => '"' . get_the_ID() . '"'
             )
           )
         ));
+        // echo '<pre>';
+        // print_r($homepageEvents);
+        // echo '</pre>';
 
         if ($homepageEvents->have_posts()) {
           echo '<hr class="section-break">';
@@ -83,6 +88,8 @@
         }
 
         wp_reset_postdata();
+
+          // Output related Campuses
         $relatedCampuses = get_field('related_campus');
 
         if ($relatedCampuses) {
