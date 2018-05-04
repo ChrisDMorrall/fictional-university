@@ -13762,6 +13762,7 @@ function () {
     this.editButton = (0, _jquery.default)(".edit-note");
     this.deleteButton = (0, _jquery.default)(".delete-note");
     this.updateButton = (0, _jquery.default)(".update-note");
+    this.createButton = (0, _jquery.default)(".submit-note");
     this.events();
     this.isNoteEditable = false;
   } // 2. events
@@ -13773,6 +13774,7 @@ function () {
       this.editButton.on("click", this.editNote.bind(this));
       this.deleteButton.on("click", this.deleteNote.bind(this));
       this.updateButton.on("click", this.updateNote.bind(this));
+      this.createButton.on("click", this.createNote.bind(this));
     } // 3. methods (function, action)
 
   }, {
@@ -13848,6 +13850,34 @@ function () {
           _this.makeNoteReadOnly(thisNote);
 
           console.log("Post Saved");
+          console.log(response);
+        },
+        error: function error(response) {
+          console.log("Error");
+          console.log(response);
+        }
+      });
+    }
+  }, {
+    key: "createNote",
+    value: function createNote(e) {
+      var ourNewPost = {
+        'title': (0, _jquery.default)(".new-note-title").val(),
+        'content': (0, _jquery.default)(".new-note-body").val(),
+        'status': 'publish'
+      };
+
+      _jquery.default.ajax({
+        beforeSend: function beforeSend(xhr) {
+          xhr.setRequestHeader('X-WP-Nonce', universityData.nonce);
+        },
+        url: universityData.root_url + '/wp-json/wp/v2/note/',
+        type: 'POST',
+        data: ourNewPost,
+        success: function success(response) {
+          (0, _jquery.default)(".new-note-title, .new-note-body").val('');
+          (0, _jquery.default)('<li>New note here</li>').prependTo("#my-notes").hide().slideDown();
+          console.log("Created Note");
           console.log(response);
         },
         error: function error(response) {

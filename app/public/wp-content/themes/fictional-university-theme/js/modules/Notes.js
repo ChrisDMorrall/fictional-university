@@ -7,6 +7,7 @@ class Notes {
     this.editButton = $(".edit-note");
     this.deleteButton = $(".delete-note");
     this.updateButton = $(".update-note");
+    this.createButton = $(".submit-note");
     this.events();
     this.isNoteEditable = false;
   }
@@ -16,6 +17,7 @@ class Notes {
     this.editButton.on("click", this.editNote.bind(this));
     this.deleteButton.on("click", this.deleteNote.bind(this));
     this.updateButton.on("click", this.updateNote.bind(this));
+    this.createButton.on("click", this.createNote.bind(this));
   }
 
   // 3. methods (function, action)
@@ -81,6 +83,32 @@ class Notes {
       success: (response) => {
         this.makeNoteReadOnly(thisNote);
         console.log("Post Saved");
+        console.log(response);
+      },
+      error: (response) => {
+        console.log("Error");
+        console.log(response);
+      }
+    });
+  }
+
+  createNote(e) {
+    var ourNewPost = {
+      'title': $(".new-note-title").val(),
+      'content': $(".new-note-body").val(),
+      'status': 'publish'
+    }
+    $.ajax({
+      beforeSend: (xhr) => {
+        xhr.setRequestHeader('X-WP-Nonce', universityData.nonce);
+      },
+      url: universityData.root_url + '/wp-json/wp/v2/note/',
+      type: 'POST',
+      data: ourNewPost,
+      success: (response) => {
+        $(".new-note-title, .new-note-body").val('');
+        $('<li>New note here</li>').prependTo("#my-notes").hide().slideDown();
+        console.log("Created Note");
         console.log(response);
       },
       error: (response) => {
