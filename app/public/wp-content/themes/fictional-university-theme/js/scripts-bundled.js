@@ -13761,7 +13761,9 @@ function () {
     this.notesField = (0, _jquery.default)(".note-body-field");
     this.editButton = (0, _jquery.default)(".edit-note");
     this.deleteButton = (0, _jquery.default)(".delete-note");
+    this.updateButton = (0, _jquery.default)(".update-note");
     this.events();
+    this.isNoteEditable = false;
   } // 2. events
 
 
@@ -13770,15 +13772,37 @@ function () {
     value: function events() {
       this.editButton.on("click", this.editNote.bind(this));
       this.deleteButton.on("click", this.deleteNote.bind(this));
+      this.updateButton.on("click", this.updateNote.bind(this));
     } // 3. methods (function, action)
 
   }, {
     key: "editNote",
     value: function editNote(e) {
       var thisNote = (0, _jquery.default)(e.target).parents("li");
+
+      if (!this.isNoteEditable) {
+        this.makeNoteEditable(thisNote);
+        this.isNoteEditable = true;
+      } else {
+        this.makeNoteReadOnly(thisNote);
+        this.isNoteEditable = false;
+      }
+    }
+  }, {
+    key: "makeNoteEditable",
+    value: function makeNoteEditable(thisNote) {
       thisNote.find(".note-title-field, .note-body-field").removeAttr("readonly").addClass("note-active-field");
       console.log('Edit');
       thisNote.find(".update-note").addClass("update-note--visible");
+      this.editButton.html('<i class="fa fa-times" aria-hidden="true"></i> Cancel');
+    }
+  }, {
+    key: "makeNoteReadOnly",
+    value: function makeNoteReadOnly(thisNote) {
+      thisNote.find(".note-title-field, .note-body-field").attr("readonly", true).removeClass("note-active-field");
+      console.log('ReadOnly');
+      thisNote.find(".update-note").removeClass("update-note--visible");
+      this.editButton.html('<i class="fa fa-pencil" aria-hidden="true"></i> Edit');
     }
   }, {
     key: "deleteNote",
@@ -13794,6 +13818,36 @@ function () {
         success: function success(response) {
           thisNote.slideUp();
           console.log("Deleted");
+          console.log(response);
+        },
+        error: function error(response) {
+          console.log("Error");
+          console.log(response);
+        }
+      });
+    }
+  }, {
+    key: "updateNote",
+    value: function updateNote(e) {
+      var _this = this;
+
+      var thisNote = (0, _jquery.default)(e.target).parents("li");
+      var ourUpdatedPost = {
+        'title': thisNote.find(".note-title-field").val(),
+        'content': thisNote.find(".note-body-field").val()
+      };
+
+      _jquery.default.ajax({
+        beforeSend: function beforeSend(xhr) {
+          xhr.setRequestHeader('X-WP-Nonce', universityData.nonce);
+        },
+        url: universityData.root_url + '/wp-json/wp/v2/note/' + thisNote.data('id'),
+        type: 'POST',
+        data: ourUpdatedPost,
+        success: function success(response) {
+          _this.makeNoteReadOnly(thisNote);
+
+          console.log("Post Saved");
           console.log(response);
         },
         error: function error(response) {
