@@ -13758,11 +13758,6 @@ function () {
   function Notes() {
     _classCallCheck(this, Notes);
 
-    this.notesField = (0, _jquery.default)(".note-body-field");
-    this.editButton = (0, _jquery.default)(".edit-note");
-    this.deleteButton = (0, _jquery.default)(".delete-note");
-    this.updateButton = (0, _jquery.default)(".update-note");
-    this.createButton = (0, _jquery.default)(".submit-note");
     this.events();
     this.isNoteEditable = false;
   } // 2. events
@@ -13771,10 +13766,10 @@ function () {
   _createClass(Notes, [{
     key: "events",
     value: function events() {
-      this.editButton.on("click", this.editNote.bind(this));
-      this.deleteButton.on("click", this.deleteNote.bind(this));
-      this.updateButton.on("click", this.updateNote.bind(this));
-      this.createButton.on("click", this.createNote.bind(this));
+      (0, _jquery.default)("#my-notes").on("click", ".edit-note", this.editNote.bind(this));
+      (0, _jquery.default)("#my-notes").on("click", ".delete-note", this.deleteNote.bind(this));
+      (0, _jquery.default)("#my-notes").on("click", ".update-note", this.updateNote.bind(this));
+      (0, _jquery.default)(".submit-note").on("click", this.createNote.bind(this));
     } // 3. methods (function, action)
 
   }, {
@@ -13796,7 +13791,7 @@ function () {
       thisNote.find(".note-title-field, .note-body-field").removeAttr("readonly").addClass("note-active-field");
       console.log('Edit');
       thisNote.find(".update-note").addClass("update-note--visible");
-      this.editButton.html('<i class="fa fa-times" aria-hidden="true"></i> Cancel');
+      thisNote.find(".edit-note").html('<i class="fa fa-times" aria-hidden="true"></i> Cancel');
     }
   }, {
     key: "makeNoteReadOnly",
@@ -13804,7 +13799,7 @@ function () {
       thisNote.find(".note-title-field, .note-body-field").attr("readonly", true).removeClass("note-active-field");
       console.log('ReadOnly');
       thisNote.find(".update-note").removeClass("update-note--visible");
-      this.editButton.html('<i class="fa fa-pencil" aria-hidden="true"></i> Edit');
+      thisNote.find(".edit-note").html('<i class="fa fa-pencil" aria-hidden="true"></i> Edit');
     }
   }, {
     key: "deleteNote",
@@ -13876,7 +13871,7 @@ function () {
         data: ourNewPost,
         success: function success(response) {
           (0, _jquery.default)(".new-note-title, .new-note-body").val('');
-          (0, _jquery.default)('<li>New note here</li>').prependTo("#my-notes").hide().slideDown();
+          (0, _jquery.default)("\n          <li data-id=\"".concat(response.id, "\">\n            <input readonly class=\"note-title-field\" value=\"").concat(response.title.raw, "\">\n            <span class=\"edit-note\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i>     Edit</span><span class=\"delete-note\"><i class=\"fa fa-trash-o\" aria-hidden=\"true\"></i> Delete</span>\n            <textarea readonly class=\"note-body-field\">").concat(response.content.raw, "</textarea>\n            <span class=\"update-note btn btn--blue btn--small\"><i class=\"fa fa-arrow-right\" aria-hidden=\"true\"></i> Save</span>\n          </li>\n          ")).prependTo("#my-notes").hide().slideDown();
           console.log("Created Note");
           console.log(response);
         },

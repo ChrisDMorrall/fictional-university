@@ -3,21 +3,16 @@ import $ from 'jquery';
 class Notes {
   // 1. describe and create/initiate our object
   constructor() {
-    this.notesField = $(".note-body-field");
-    this.editButton = $(".edit-note");
-    this.deleteButton = $(".delete-note");
-    this.updateButton = $(".update-note");
-    this.createButton = $(".submit-note");
     this.events();
     this.isNoteEditable = false;
   }
 
   // 2. events
   events() {
-    this.editButton.on("click", this.editNote.bind(this));
-    this.deleteButton.on("click", this.deleteNote.bind(this));
-    this.updateButton.on("click", this.updateNote.bind(this));
-    this.createButton.on("click", this.createNote.bind(this));
+    $("#my-notes").on("click", ".edit-note", this.editNote.bind(this));
+    $("#my-notes").on("click", ".delete-note", this.deleteNote.bind(this));
+    $("#my-notes").on("click", ".update-note", this.updateNote.bind(this));
+    $(".submit-note").on("click", this.createNote.bind(this));
   }
 
   // 3. methods (function, action)
@@ -37,14 +32,14 @@ class Notes {
     thisNote.find(".note-title-field, .note-body-field").removeAttr("readonly").addClass("note-active-field");
     console.log('Edit');
     thisNote.find(".update-note").addClass("update-note--visible");
-    this.editButton.html('<i class="fa fa-times" aria-hidden="true"></i> Cancel');
+    thisNote.find(".edit-note").html('<i class="fa fa-times" aria-hidden="true"></i> Cancel');
   }
 
   makeNoteReadOnly(thisNote) {
     thisNote.find(".note-title-field, .note-body-field").attr("readonly", true).removeClass("note-active-field");
     console.log('ReadOnly');
     thisNote.find(".update-note").removeClass("update-note--visible");
-    this.editButton.html('<i class="fa fa-pencil" aria-hidden="true"></i> Edit');
+    thisNote.find(".edit-note").html('<i class="fa fa-pencil" aria-hidden="true"></i> Edit');
   }
 
   deleteNote(e) {
@@ -107,7 +102,14 @@ class Notes {
       data: ourNewPost,
       success: (response) => {
         $(".new-note-title, .new-note-body").val('');
-        $('<li>New note here</li>').prependTo("#my-notes").hide().slideDown();
+        $(`
+          <li data-id="${response.id}">
+            <input readonly class="note-title-field" value="${response.title.raw}">
+            <span class="edit-note"><i class="fa fa-pencil" aria-hidden="true"></i>     Edit</span><span class="delete-note"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</span>
+            <textarea readonly class="note-body-field">${response.content.raw}</textarea>
+            <span class="update-note btn btn--blue btn--small"><i class="fa fa-arrow-right" aria-hidden="true"></i> Save</span>
+          </li>
+          `).prependTo("#my-notes").hide().slideDown();
         console.log("Created Note");
         console.log(response);
       },
