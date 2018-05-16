@@ -13951,12 +13951,30 @@ function () {
   }, {
     key: "createLike",
     value: function createLike() {
-      alert("Create test message");
+      _jquery.default.ajax({
+        url: universityData.root_url + '/wp-json/university/v1/manageLike',
+        type: 'POST',
+        success: function success(response) {
+          console.log(response);
+        },
+        error: function error(response) {
+          console.log(response);
+        }
+      });
     }
   }, {
     key: "deleteLike",
     value: function deleteLike() {
-      alert("Delete test message");
+      _jquery.default.ajax({
+        url: universityData.root_url + '/wp-json/university/v1/manageLike',
+        type: 'DELETE',
+        success: function success(response) {
+          console.log(response);
+        },
+        error: function error(response) {
+          console.log(response);
+        }
+      });
     }
   }]);
 
